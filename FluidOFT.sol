@@ -7,8 +7,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import "./interfaces/IOFT.sol";
-import "./OFTCore.sol";
+import "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
+import "@layerzerolabs/solidity-examples/contracts/token/oft/v1/interfaces/IOFT.sol";
+import "@layerzerolabs/solidity-examples/contracts/token/oft/v1/OFTCore.sol";
+
 
 library SafeERC20 {
     function safeTransfer(address token, address to, uint256 value) internal {
@@ -31,7 +33,7 @@ interface IUniswapV2Router02 {
     function addLiquidityETH(address token, uint256 amountTokenDesired, uint256 amountTokenMin, uint256 amountETHMin, address to, uint256 deadline) external payable returns (uint256 amountToken, uint256 amountETH, uint256 liquidity);
 }
 
-contract Fluid is Ownable, OFTCore, IOFT {
+contract Fluid is Ownable, OFTCore, IOFT, IERC20Errors {
     string private constant _name = unicode"Fluid";
     string private constant _symbol = unicode"Fluid";
     uint256 private _totalSupply;
@@ -64,12 +66,6 @@ contract Fluid is Ownable, OFTCore, IOFT {
     mapping(address => bool) private automatedMarketMakerPairs;
 
     event SwapAndLiquify(uint256 tokensSwapped, uint256 teamETH, uint256 revETH, uint256 TreasuryETH);
-    //event Transfer(address indexed from, address indexed to, uint256 value);
-    //event Approval(address indexed owner, address indexed spender, uint256 value);
-    error ERC20InsufficientBalance(address from, uint256 fromBalance, uint256 requiredBalance);
-    error ERC20InvalidReceiver(address);
-    error ERC20InvalidSender(address);
-    error ERC20InsufficientAllowance(address, uint256, uint256);
 
     IUniswapV2Router02 public uniswapV2Router;
     address public uniswapV2Pair;
